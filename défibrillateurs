@@ -1,0 +1,55 @@
+<?php
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+
+fscanf(STDIN, "%s", $LON);
+fscanf(STDIN, "%s", $LAT);
+fscanf(STDIN, "%d", $N);
+$defArray = [];
+for ($i = 0; $i < $N; $i++)
+{
+    $DEFIB = explode(';', stream_get_line(STDIN, 256 + 1, "\n"));
+
+    //replace ',', by '.';
+    $DEFIB= str_replace(',', '.', $DEFIB);
+    //Convert degres to radians
+    $DEFIB[4] = deg2rad($DEFIB[4]);
+    $DEFIB[5] = deg2rad($DEFIB[5]);
+
+    $cordB = [
+        'long' => $DEFIB[4],
+        'lat' => $DEFIB[5]
+    ];
+
+    //calculate distance
+   $DEFIB['distance'] =  distance([
+        'long' => deg2rad(str_replace(',', '.',$LON)),
+        'lat' => deg2rad(str_replace(',', '.', $LAT))
+    ], $cordB);
+    
+    $defArray[] = $DEFIB;
+
+}
+
+    array_multisort(array_column($defArray,'distance'), $defArray);
+
+    echo ($defArray[0][1]);
+
+function distance($a, $b){
+    $x = ($b['long'] - $a['long']) * cos(($a['lat'] + $b['lat'])/2);
+    $y = $b['lat'] - $a['lat'];
+
+    $d = sqrt(($x ** 2) + ($y ** 2)) * (6371);
+    return $d;
+}
+
+
+// Write an answer using echo(). DON'T FORGET THE TRAILING \n
+// To debug: error_log(var_export($var, true)); (equivalent to var_dump)
+
+
+
+//echo("answer\n");
+?>
